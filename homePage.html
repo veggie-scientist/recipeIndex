@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" rel="noopener" target="_blank" href="mystyles.css">
+
+
+    <title>Welcome to the Grocery List Creator!</title>
+  </head>
+  <body>
+    <h1>Please select which meals you would like to make this week.</h1>
+        <p1>
+            <input type="checkbox" id="recipe1"  />
+          <label for="recipe1">Ramen Noodle Stir Fry with Sauce</label>
+          <br>
+          <input type="checkbox" id="recipe2"  />
+          <label for="recipe2">Quesadilla</label>
+          <br>
+          <input type="checkbox" id="recipe3"  />
+          <label for="recipe3">Pita Pizzas</label>
+          <br>
+          <input type="checkbox" id="recipe4"  />
+          <label for="recipe4">Baked Beef Taquitos</label>
+          <br>
+          <input type="checkbox" id="recipe5"  />
+          <label for="recipe5">Baked Salmon with Asparagus</label>
+          <br>
+          <input type="checkbox" id="recipe6"  />
+          <label for="recipe6">Garlic Butter Steak with Noodles</label>
+          <br>
+          <input type="checkbox" id="recipe7"  />
+          <label for="recipe7">Grands Chicken Pot Pie</label>
+          <br>
+          <input type="checkbox" id="recipe8"  />
+          <label for="recipe8">Parmesan Chicken Bake</label>
+          <br>
+          <input type="checkbox" id="recipe9"  />
+          <label for="recipe9">Crock Pot Creamy Ranch Chicken</label>
+          <br>
+          <input type="checkbox" id="recipe10"  />
+          <label for="recipe10">Slow Cooker Enchilada Casserole</label>
+          <br>
+          <input type="checkbox" id="recipe11"  />
+          <label for="recipe11">Crock Pot Lasagna</label>
+          <br>
+          <input type="checkbox" id="recipe12"  />
+          <label for="recipe12">Cheesy Taco Sloppy Joes</label>
+        </p1>
+        <br>
+        <button onclick="generateList()" >Generate Grocery List</button>
+        <button onclick="clearList(1)">Clear List</button>
+         
+        
+        <h3> Add your own items (comma separated): 
+        <input type="text" id="inputList">
+        <button onclick="addToList()">Add to list</button>
+            </h3>
+          
+         
+   <h2 id = groceryHeader>
+   </h2>
+   <div id = "groceryList">
+
+   </div>
+  </body>
+</html>
+
+<!----
+scripts below are to:
+create the default amounts and units of each ingredient
+add ingredients that are checked
+-->
+<script>
+    function generateList(){
+        clearList(0)
+        document.getElementById("groceryHeader").innerHTML = "Grocery List";
+        defaults(ingredientsMap);
+        //get each checkbox and call each method that was checked
+        checkCheckBoxes(); 
+        //print out everything that doesnt have 0
+        for (var i in ingredientsMap){
+            // console.log(ingredientsMap[i][0] + " " + ingredientsMap[i][1] + " " + ingredientsMap[i][2])
+            if(ingredientsMap[i][0]!= 0 && ingredientsMap[i][0]!= -1){
+                document.getElementById("groceryList").innerHTML += '<input type=checkbox> ' + ingredientsMap[i][0] + " " 
+                    + ingredientsMap[i][1] + '<br>';
+            }else if(ingredientsMap[i][0] == -1){
+                document.getElementById("groceryList").innerHTML += '<h3><u> ' + ingredientsMap[i][1] + '</h3>';
+            }
+        }
+    }
+    //set every possible ingredient to 0
+    function defaults(ingredientsMap){
+        //amounts and units
+        ingredientsMap.meat = [-1, "MEAT"];
+        ingredientsMap.groundBeef = [0, 'lbs ground beef'];
+        ingredientsMap.salmon = [0, 'lbs salmon filets'];
+        ingredientsMap.flankSteak = [0, 'lbs flank steak'];
+        ingredientsMap.cookedChicken = [0, 'cups cooked chicken'];
+        ingredientsMap.chickenBreast = [0, 'chicken breasts'];
+
+        ingredientsMap.grains = [-1, "GRAINS"];
+        ingredientsMap.ramenNoodles = [0, 'packets ramen'];
+        ingredientsMap.tortilla = [0, 'tortilla'];
+        ingredientsMap.pita = [0, 'pitas'];
+        ingredientsMap.pasta = [0, 'box pasta'];
+        ingredientsMap.ravioli = [0, 'package ravioli'];
+        ingredientsMap.croutons = [0, 'package garlic croutons'];
+        ingredientsMap.hamburgerBuns = [0, 'buns'];
+
+        ingredientsMap.condiments = [-1, "CONDIMENTS/SPICES"];
+        ingredientsMap.soySauce = [0, 'cups soy sauce'];
+        ingredientsMap.appleCiderVinegar = [0, 'tbsp apple cider vinegar'];
+        ingredientsMap.sriracha = [0, 'tbsp sriracha'];
+        ingredientsMap.tomatoPaste = [0, 'tbsp tomato paste'];
+        ingredientsMap.tomatoSauce = [0, 'can tomato paste'];
+        ingredientsMap.oliveOil = [0, 'tbsp olive oil'];
+        ingredientsMap.chickenBroth = [0, 'cups chicken broth'];
+        ingredientsMap.lemonJuice = [0, 'cup lemon juice'];
+        ingredientsMap.ranchPowder = [0, 'packet dry ranch dressing mix'];
+        ingredientsMap.brownSugar = [0, 'tbsp brown sugar'];
+        ingredientsMap.mincedGarlic = [0, 'tsp minced garlic'];
+        
+        ingredientsMap.dairy = [-1, "DAIRY"];
+        ingredientsMap.milk = [0, 'cup milk'];
+        ingredientsMap.parmesanCheese = [0, 'cups parmesan cheese'];
+        ingredientsMap.mexicanCheese = [0, 'cups mexican cheese'];
+        ingredientsMap.creamCheese = [0, 'tbsp cream cheese'];
+        ingredientsMap.mozzerellaCheese = [0, 'cups mozzerella cheese'];
+        ingredientsMap.butter = [0, 'tbsp butter'];
+        ingredientsMap.cheddarCheese = [0, 'cups cheddar cheese'];
+        ingredientsMap.tacoSeasoning = [0, 'tbsp taco seasoning'];
+        ingredientsMap.cornstarch = [0, 'tbsp cornstarch'];
+        ingredientsMap.beefBroth = [0, 'cup beef broth'];
+
+        ingredientsMap.produce = [-1, "PRODUCE"];
+        ingredientsMap.cherryTomatoes = [0, 'tomatoes'];
+        ingredientsMap.asparagus = [0, 'lbs asparagus'];
+        ingredientsMap.russetPotatoes = [0, 'potatoes'];
+        
+        ingredientsMap.cannedGoods = [-1, "CANNED GOODS"];
+        ingredientsMap.salsa = [0, 'cups salsa'];
+        ingredientsMap.pizzaSauce = [0, 'can pizza sacuce'];
+        ingredientsMap.potPieSoup = [0, 'cans Chicken Pot Pie Style Soup'];
+        ingredientsMap.pastaSauce = [0, 'cups marinara sauce'];
+        ingredientsMap.creamChickenSoup = [0, 'can cream of chicken soup'];
+        ingredientsMap.redEnchiladaSauce = [0, 'oz enchilada sauce'];
+        ingredientsMap.blackOlives = [0, 'can black olives'];
+        ingredientsMap.grands = [0, 'can pillsbury grands'];
+
+        ingredientsMap.frozen = [-1, "FROZEN"];
+        ingredientsMap.frozenVeggies = [0, 'bags frozen mixed vegetables'];
+
+        ingredientsMap.manuallyAdded = [-1, "MANUALLY ADDED"];
+        
+               
+    }
+    //iterate through and check all the check boxes
+    function checkCheckBoxes(){
+        if(checkBoxChecked("recipe1")){
+            ramen(); 
+        }
+        if(checkBoxChecked("recipe2")){
+            quesidilla(); 
+        }
+        if(checkBoxChecked("recipe3")){
+            pitaPizza(); 
+        }
+        if(checkBoxChecked("recipe4")){
+            taquitos(); 
+        }
+        if(checkBoxChecked("recipe5")){
+            salmon(); 
+        }
+        if(checkBoxChecked("recipe6")){
+            steakWithNoodles(); 
+        }
+        if(checkBoxChecked("recipe7")){
+            chickenPotPie(); 
+        }
+        if(checkBoxChecked("recipe8")){
+            chickenBake(); 
+        }
+        if(checkBoxChecked("recipe9")){
+            ranchChicken(); 
+        }
+        if(checkBoxChecked("recipe10")){
+            enchiladaCasserole(); 
+        }
+        if(checkBoxChecked("recipe11")){
+            lasagna(); 
+        }
+        if(checkBoxChecked("recipe12")){
+            tacoSloppyJoes(); 
+        }
+    }
+    //check if the checkbox is checked
+    function checkBoxChecked(name){
+        if(document.getElementById(name).checked == true){
+            return true
+        }else{
+            return false
+        }
+    }
+    
+
+    //make script for each recipe where the correct amounts are added
+    function ramen(){
+        ingredientsMap.groundBeef[0] += 1; 
+        ingredientsMap.appleCiderVinegar[0] += 1;
+        ingredientsMap.ramenNoodles[0] += 2; 
+        ingredientsMap.soySauce[0] += .25;
+        ingredientsMap.brownSugar[0] += 1;
+        ingredientsMap.appleCiderVinegar[0] += 1;
+        ingredientsMap.sriracha[0] += 2;
+        ingredientsMap.mincedGarlic += 1;  
+        console.log(ingredientsMap)
+    }
+    function quesidilla(){
+        ingredientsMap.tortilla[0] += 1;
+        ingredientsMap.tomatoPaste[0] += 1;
+        ingredientsMap.creamCheese[0] += 1;
+        ingredientsMap.mincedGarlic[0] += 1;
+        ingredientsMap.cherryTomatoes[0] += 2;
+        ingredientsMap.mexicanCheese[0] += .5;     
+
+    }
+    function pitaPizza(){
+        ingredientsMap.pita[0] += 2;
+        ingredientsMap.oliveOil[0] += 2;
+        ingredientsMap.pizzaSauce[0] += 4;   
+    }
+    function taquitos(){
+        ingredientsMap.groundBeef[0] += 1;
+        ingredientsMap.mincedGarlic[0] += 1;
+        ingredientsMap.salsa[0] += 2;
+        ingredientsMap.tortilla[0] += 10;
+        ingredientsMap.mexicanCheese[0] += 1;     
+    }
+    function salmon(){
+        ingredientsMap.salmon[0] += 1;
+        ingredientsMap.beefBroth[0] += 2;
+        ingredientsMap.lemonJuice[0] += 1.5;
+        ingredientsMap.mincedGarlic[0] += 4;
+        ingredientsMap.butter[0] += 4;
+        ingredientsMap.asparagus[0] += 1;
+          
+    }
+    function steakWithNoodles(){
+        ingredientsMap.flankSteak[0] += 1.5;
+        ingredientsMap.pasta[0] += 1;
+        ingredientsMap.oliveOil[0] += 2;
+        ingredientsMap.butter[0] += 2; 
+        ingredientsMap.chickenBroth[0] += .25;
+        ingredientsMap.mincedGarlic[0] += 4;
+        ingredientsMap.soySauce[0] += .3;
+        ingredientsMap.lemonJuice[0] += .25;
+        ingredientsMap.oliveOil[0] += .5;
+        ingredientsMap.sriracha[0] += 1;       
+
+    }
+    function chickenPotPie(){
+        ingredientsMap.potPieSoup[0] += 2;
+        ingredientsMap.frozenVeggies[0] += 1;
+        ingredientsMap.cookedChicken[0] += 2.5;
+        ingredientsMap.grands[0] += 1;
+    }
+    function chickenBake(){
+        ingredientsMap.oliveOil[0] += 2;
+        ingredientsMap.mincedGarlic[0] += 2;
+        ingredientsMap.chickenBreast[0] += 6;
+        ingredientsMap.pastaSauce[0] += 2;
+        ingredientsMap.mozzerellaCheese[0] += 2;
+        ingredientsMap.parmesanCheese[0] += .5;
+        ingredientsMap.croutons[0] += 1;
+    }
+    function ranchChicken(){
+        ingredientsMap.chickenBreast[0] += 4;
+        ingredientsMap.russetPotatoes[0] += 6;
+        ingredientsMap.creamChickenSoup[0] += 1;
+        ingredientsMap.ranchPowder[0] += 1;
+        ingredientsMap.milk[0] += .5;
+    }
+    function enchiladaCasserole(){
+        ingredientsMap.chickenBreast[0] += 1.5;
+        ingredientsMap.redEnchiladaSauce[0] += 28;
+        ingredientsMap.tortilla[0] += 10;
+        ingredientsMap.cheddarCheese[0] += 2;
+        ingredientsMap.blackOlives[0] += 1;
+    }
+    function lasagna(){
+        ingredientsMap.groundBeef[0] += 1;
+        ingredientsMap.mincedGarlic[0] += 2;
+        ingredientsMap.pastaSauce[0] += 1;
+        ingredientsMap.mozzerellaCheese[0] += 4;
+        ingredientsMap.ravioli[0] += 1;
+    }
+    function tacoSloppyJoes(){
+        ingredientsMap.beefBroth[0] += 1;
+        ingredientsMap.butter[0] += 2;
+        ingredientsMap.mincedGarlic[0] += 10;
+        ingredientsMap.tomatoSauce[0] += 1;
+        ingredientsMap.tacoSeasoning[0] += 1;
+        ingredientsMap.cornstarch[0] += 1;
+        ingredientsMap.beefBroth[0] += .25;
+        ingredientsMap.mexicanCheese[0] += 1;
+        ingredientsMap.hamburgerBuns[0] += 6;
+    }
+    //clear list. if num = 1, clear checkboxes
+    function clearList(num){
+        ingredientsMap = {};
+        document.getElementById("groceryList").innerHTML = "";
+        if(num ==1){
+        //clear all check boxes
+            document.getElementById("recipe1").checked = false;
+            document.getElementById("recipe2").checked = false;
+            document.getElementById("recipe3").checked = false;
+            document.getElementById("recipe4").checked = false;
+            document.getElementById("recipe5").checked = false;
+            document.getElementById("recipe6").checked = false;
+            document.getElementById("recipe7").checked = false;
+            document.getElementById("recipe8").checked = false;
+            document.getElementById("recipe9").checked = false;
+            document.getElementById("recipe10").checked = false;
+            document.getElementById("recipe11").checked = false;
+            document.getElementById("recipe12").checked = false;
+        }
+
+    }
+    //user can type in their own item and add it to the list. will not reset anything
+    function addToList(){
+        itemToAdd = document.getElementById("inputList").value;
+        if(itemToAdd.includes(',')){
+            itemToAdd = itemToAdd.split(',')
+            for(i=0; i<itemToAdd.length; i++){
+                document.getElementById("groceryList").innerHTML += '<input type=checkbox >' + itemToAdd[i] + '<br>';
+            }
+        }else{
+            document.getElementById("groceryList").innerHTML += '<input type=checkbox >' + itemToAdd + '<br>';
+        }
+    }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
